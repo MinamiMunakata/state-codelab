@@ -30,7 +30,9 @@ import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,6 +54,10 @@ fun TodoScreen(
     onRemoveItem: (TodoItem) -> Unit,
 ) {
     Column {
+        TodoItemInputBackground(elevate = true, modifier = Modifier.fillMaxWidth()) {
+            TodoItemInput(onItemComplete = {})
+        }
+
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(top = 8.dp)
@@ -106,6 +112,32 @@ fun TodoRow(
     }
 }
 
+@Composable
+fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
+    Column {
+        Row(Modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp)
+        ) {
+            TodoInputTextField(Modifier
+                .weight(1f)
+                .padding(end = 8.dp)
+            )
+            TodoEditButton(
+                onClick = { /*TODO*/ },
+                text = "Add",
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
+    }
+}
+
+@Composable
+fun TodoInputTextField(modifier: Modifier) {
+    val (text, setText) = remember { mutableStateOf("") }
+    TodoInputText(text = text, onTextChange = setText, modifier = modifier)
+}
+
 private fun randomTint(): Float {
     return Random.nextFloat().coerceIn(0.3f, 0.9f)
 }
@@ -128,3 +160,8 @@ fun PreviewTodoRow() {
     val todo = remember { generateRandomTodoItem() }
     TodoRow(todo = todo, onItemClicked = {}, modifier = Modifier.fillMaxWidth())
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTodoItemInput() = TodoItemInput(onItemComplete = {})
+
